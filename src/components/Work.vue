@@ -1,6 +1,6 @@
 <template>
-  <div style="margin-top: 60px;">
-    <div v-for='(post, index) in list' v-bind:key='post.urlToImage' class='list-complete-item' style='min-height: 40px; height: 100%; margin-left: -20px; margin-top: 18px;'>
+  <div style="margin-top: 44px;">
+    <div v-for='(post, index) in list' v-bind:key='post.urlToImage'  id="fadeInUp" v-bind:class="{ hidden: !post.isVisible }" class='animated fadeInUp list-complete-item' style='overflow: visible; min-height: 40px; min-height: 100%; margin-left: -20px; margin-top: 18px;'>
       <b-container>
         <b-row>
           <b-col class='flex-item' cols='4' style='background-color: #FFF; padding-left: 0px; padding-right: 0px; overflow: hidden;'>
@@ -21,11 +21,12 @@
                 <!-- <i class='fa fa-share' aria-hidden='true'></i> -->
                   <i>{{ post.publishedAt }}</i>
               </p>
-              <a  v-for='vendor in post.vendors' class='homepage-link' :href='vendor.homepage' style='margin-right: 14px;'>
+              <a class='homepage-link' :href='post.homepage' style='margin-right: 14px;'>
                 <span>
-                  {{vendor.name}}
+                  {{post.vendor}}
                 </span>
               </a>
+              <!-- {{ post }} -->
             </div>
           </b-col>
         </b-row>

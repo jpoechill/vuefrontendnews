@@ -1,18 +1,22 @@
 <template >
-  <div style="margin-bottom: 14px;" v-bind:style="{ height: docHeight + 'px' }" v-bind:class="{ 'stop-scrolling': !busy }">
+  <div style="margin-bottom: 14px;" v-bind:class="{ 'stop-scrolling': !busy }">
     <header>
       <div style="position: fixed; z-index: 10; width: 100%; background-color: #111;">
         <b-container>
           <b-row>
-              <b-col class="icon-bg" cols="2">
-                <h4>
-                  <a href="/" class="icon-link">
-                    FNDR
-                  </a>
-                </h4>
+              <b-col class="icon-bg" cols="1" style="padding-bottom: 2px; margin-top: 0px; padding-top: 0px;">
+                <div style="margin-left: 6px; padding-top: 1px; padding-bottom:-3px;">
+                  <router-link :to="{ path: '/'}" style="color: #FFF; text-decoration: none;">
+                    <span style="font-size: 14px; font-weight: 700; margin-left: -10px;">
+                      FNDR
+                    </span>
+                  </router-link>
+                </div>
+
+                <!-- </h4> -->
               </b-col>
-              <b-col>
-                <div style="margin-top: 6.5px;">
+              <b-col style="margin-left: -4px;">
+                <div>
 
                     <router-link
                       v-for="vendor in urlVendors"
@@ -127,7 +131,6 @@ export default {
     ]
   }),
   computed: {
-    docHeight: window.document.body.scrollHeight - window.document.documentElement.clientHeight,
     key: function () {
       return this.$route.meta.key !== undefined
         ? this.$route.meta.key
@@ -170,6 +173,7 @@ export default {
               item.isLiked = false
               item.vendor = site.vendor
               item.homepage = site.homepage
+              item.isVisible = false
 
               if (!item.urlToImage.endsWith('bbc-sport-logo.png')) {
                 Vue.set(self.buffer, self.buffer.length, item)
@@ -204,6 +208,16 @@ export default {
           }
         }
 
+        this.posts.map((item, index) => {
+          if (index < 4) {
+            console.log(index)
+            console.log(this.posts[index])
+            item.isVisible = true
+          } else {
+            item.isVisible = false
+          }
+          return item
+        })
         // console.log('End promise')
         // console.log(this.posts)
       })
@@ -376,10 +390,24 @@ export default {
     },
     makeVisible: function () {
       this.isHidden = false
+    },
+    showMore: function (numToShow) {
+      var indexLastShown = 0
+
+      this.posts.map((item, index) => {
+        if (item.isVisible === true) {
+          indexLastShown = index
+        }
+
+        if (index <= (indexLastShown + numToShow)) {
+          item.isVisible = true
+        }
+        return item
+      })
     }
   },
   created () {
-    // var self = this
+    var self = this
     this.handleCookies()
     this.fetchArticles()
 
@@ -390,6 +418,19 @@ export default {
       var maxPageHeight = (pageHeight - windowHeight)
       var scrollPosition = window.scrollY
       console.log(scrollPosition + ' of ' + maxPageHeight)
+
+      window.document.body.onscroll = function (point) {
+        var windowHeight = window.document.documentElement.clientHeight
+        var pageHeight = window.document.body.scrollHeight
+        var maxPageHeight = (pageHeight - windowHeight)
+        var scrollPosition = window.scrollY - 50
+        console.log(scrollPosition + ' of ' + maxPageHeight)
+
+        if (scrollPosition >= (maxPageHeight - 60)) {
+          self.showMore(1)
+          console.log('Butt scroll')
+        }
+      }
 
       // point.preventDefault()
       // if (scrollPosition === maxPageHeight && self.busy === false) {
@@ -496,8 +537,8 @@ footer {
 
 .icon-bg {
   background-color: #0AA8D3;
-  padding-top: 6px;
-  padding-bottom: 4px;
+  /*padding-top: 6px;
+  padding-bottom: 4px;*/
 }
 
 .source-link {
@@ -543,6 +584,10 @@ footer {
   -webkit-animation-delay: .66s;
 }
 
+.hidden {
+  display: none;
+}
+
 .bg-img {
   transform: scale(1.0, 1.0);
   background: no-repeat center center;
@@ -558,9 +603,9 @@ footer {
   margin-right: 10px;
 }
 .list-enter-active, .list-leave-active {
-  transition: all 1s;
+  transition: all .6s;
 }
-.list-enter, .list-leave-to /* .list-leave-active below version 2.1.8 */ {
+.list-leave-to /* .list-leave-active below version 2.1.8 */ {
   opacity: 0;
   transform: translateY(30px);
 }
@@ -602,13 +647,21 @@ footer {
   background: tomato;
 }
 
-@keyframes fadeIn {
+#fadeInUp {
+  -webkit-animation-delay: .8s;
+  -moz-animation-delay: .8s;
+  -o-animation-delay: .8s;
+}
+
+@keyframes fadeInUp {
   from {
     opacity: 0;
+    transform: translate3d(0, 40%, 0);
   }
 
   to {
     opacity: 1;
+    transform: none;
   }
 }
 </style>
