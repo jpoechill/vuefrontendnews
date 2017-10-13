@@ -19,7 +19,7 @@
                 <i class='fa fa-heart-o' aria-hidden='true'></i>
                   {{post.author}} |
                 <!-- <i class='fa fa-share' aria-hidden='true'></i> -->
-                  <i>{{ post.publishedAt }}</i>
+                  <i>{{ returnDate(post.publishedAt) }}</i>
               </p>
               <a class='homepage-link' :href='post.homepage' style='margin-right: 14px;'>
                 <span>
@@ -36,9 +36,17 @@
 </template>
 
 <script>
+import moment from 'moment'
+
 export default {
   name: 'hello',
-  props: ['list']
+  props: ['list'],
+  methods: {
+    returnDate: function (data) {
+      var now = moment(data).format('lll')
+      return now
+    }
+  }
 }
 </script>
 
