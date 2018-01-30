@@ -2,6 +2,10 @@
 
 > A Vue.js project
 
+## Screenshot
+
+![Screenshot](/static/frontendr_homepage.png)
+
 ## Build Setup
 
 ``` bash
