@@ -24,7 +24,6 @@ const routes = [
 
 const router = new VueRouter({
   mode: 'history',
-  history: true,
   routes,
   saveScrollPosition: true
 })

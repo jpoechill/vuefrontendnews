@@ -4,18 +4,16 @@
       <div style="position: fixed; z-index: 10; width: 100%; background-color: #111;">
         <b-container>
           <b-row>
-              <b-col class="icon-bg" cols="1" style="padding-bottom: 2px; margin-top: 0px; padding-top: 0px;">
-                <div style="margin-left: 6px; padding-top: 1px; padding-bottom:-3px;">
+              <b-col class="icon-bg" cols="1" style="max-width: 100%; padding-bottom: 9px; margin-top: -2px; padding-top: 6px;">
+                <div style="margin-left: 6px; padding-top: 3px; margin-top: 0px; padding-right: 4px;">
                   <router-link :to="{ path: '/'}" style="color: #FFF; text-decoration: none;">
-                    <span style="font-size: 14px; font-weight: 700; margin-left: -10px;">
-                      FNDR
+                    <span style="font-size: 20px; font-weight: 700; margin-left: -10px; letter-spacing: 1.2px;">
+                      FRONTENDR
                     </span>
                   </router-link>
                 </div>
-
-                <!-- </h4> -->
               </b-col>
-              <b-col style="margin-left: -4px;">
+              <b-col style="margin-left: -4px; padding-top: 8px;">
                 <div>
 
                     <router-link
@@ -38,22 +36,9 @@
         </b-container>
       </div>
     </header>
-
     <transition  name="list"  mode="out-in" appear>
       <router-view :list="posts" :returnDate="returnDate" :key="posts.length" style="padding-top: 0px;"></router-view>
     </transition>
-
-    <!-- <div v-bind:class="{ hidden: isHidden }">
-      <div>
-        <div class="container">
-          <div class="more-stories row">
-            <div class="col-12" v-on:click="moreStories">
-              MORE STORIES
-            </div>
-          </div>
-        </div>
-      </div>
-    </div> -->
   </div>
 </template>
 
@@ -154,9 +139,7 @@ export default {
       this.posts = []
       this.buffer = []
 
-      // console.log('Fetching')
       promises = self.urlVendors.map((site) => {
-        // console.log(site)
         if (site.isClicked) {
           var self = this
           var siteURL = 'https://newsapi.org/v1/articles?source=' + site.siteURL + '&sortBy=latest&apiKey=b3e8f523645e4678a2355e4603dfdd42'
@@ -187,12 +170,7 @@ export default {
       })
 
       Promise.all(promises).then(() => {
-        // var postsLength = self.posts.length
         var bufferLength = self.buffer.length
-
-        // console.log("Posts length: " + (this.posts.length))
-        // console.log("Buffer length: " + this.buffer.length)
-        // console.log(this.buffer)
 
         if (bufferLength <= 8) {
           self.makeHidden()
@@ -210,27 +188,15 @@ export default {
 
         this.posts.map((item, index) => {
           if (index < 4) {
-            console.log(index)
-            console.log(this.posts[index])
             item.isVisible = true
           } else {
             item.isVisible = false
           }
           return item
         })
-        // console.log('End promise')
-        // console.log(this.posts)
       })
     },
     vendorIsClicked: function (vendor) {
-      // Update posts
-      // console.log("Posts length: " + this.posts.length)
-      // for (let i = 0; i < this.posts.length; i++) {
-      //   console.log("Checking index: " + i)
-      //   if (this.posts[i].vendor === vendor.vendor) {
-      //     this.posts.splice(i, 1)
-      //   }
-      // }
       var self = this
 
       this.posts = this.posts.filter((post) => {
@@ -246,24 +212,12 @@ export default {
       })
 
       // Update visible posts count
-      // console.log("Posts count: " + this.posts.length)
       if (this.posts.length < 9) {
-        // var lenNeedToAdd = 8 - this.posts.length
-        // console.log("Need to add num posts: " + lenNeedToAdd)
-        // console.log("Buffer: " + this.buffer)
-
         var postsLengthCurr = self.posts.length
         var totalVisibleLessPostsLength = 8 - this.posts.length
-        // console.log("For loop len: " + totalVisibleLessPostsLength)
         for (let i = 0; i < totalVisibleLessPostsLength; i++) {
-          // console.log("Adding: " + i)
-          // console.log(self.buffer)
-          // console.log("Buffer length: " + this.buffer.length)
           var bufferIndexToAdd = postsLengthCurr + i
-          // console.log("Index of buffer to add from: " + bufferIndexToAdd)
           if (bufferIndexToAdd < this.buffer.length) {
-            // console.log("Should be adding here!")
-            // console.log(self.buffer)
             Vue.set(self.posts, self.posts.length, self.buffer[postsLengthCurr + i])
           }
         }
@@ -280,8 +234,6 @@ export default {
       if (vendor.isClicked === false) {
         vendor.isClicked = true
 
-        // console.log("On click")
-
         // Append to cookies
         var sources = this.$cookie.get('activeSources').split(',')
         sources.push(vendor.siteURL)
@@ -290,8 +242,6 @@ export default {
         this.fetchArticles()
       } else {
         vendor.isClicked = false
-
-        // console.log("Off click")
 
         // Remove match, and update cookies
         sources = this.$cookie.get('activeSources').split(',')
@@ -312,22 +262,12 @@ export default {
       }
     },
     handleCookies: function () {
-      // console.log("Getting cookies: ")
-      // console.log(this.$cookie.get('sources')
-      //
-      // console.log("Created")
       var cookies = this.$cookie.get('activeSources')
 
       if (cookies === null) {
-        // console.log("Cookies are null")
         this.$cookie.set('activeSources', ['the-verge', 'recode'], 7)
       } else {
-        // console.log("Cookies: " + this.$cookie.get('activeSources'))
-        // console.log("Getting cookies...")
         var sources = this.$cookie.get('activeSources').split(',')
-
-        // console.log("Cookies val: " + sources)
-        // console.log(sources.length)
 
         this.urlVendors = this.urlVendors.filter((vendor) => {
           if (sources.includes(vendor.siteURL)) {
@@ -352,15 +292,9 @@ export default {
       var baseLength = self.posts.length
 
       this.busy = true
-      console.log('Adding...')
-      console.log('Total: ' + bufferLength)
-      console.log('Base length: ' + baseLength)
-      console.log('Buffer length: ' + bufferLength)
 
       // Add stories from buffer,
       // and remove button if no more stories to show
-
-      // console.log("Posts length: " + baseLength)
       if (self.posts.length + 8 > bufferLength) {
         self.makeHidden()
       } else {
@@ -368,19 +302,13 @@ export default {
       }
 
       if (baseLength < (bufferLength)) {
-        // add stories
+        // Add stories
         for (let i = 0; i < 8; i++) {
           if ((posts.length) < buffer.length) {
             posts.push(buffer[baseLength + i])
           }
         }
-        // window.scrollTo(0, maxPageHeight)
       }
-
-      // console.log('Max pageHeight, again: ' + maxPageHeight)
-
-      // console.log("New posts length: " + self.posts.length)
-      // console.log("Buffer length: " + self.buffer.length)
     },
     toggleLike: function (index) {
       this.posts[index].isLiked = !this.posts[index].isLiked
@@ -431,27 +359,7 @@ export default {
           console.log('Butt scroll')
         }
       }
-
-      // point.preventDefault()
-      // if (scrollPosition === maxPageHeight && self.busy === false) {
-      //   console.log('Reached the end...')
-      //   console.log('Page height: ' + maxPageHeight)
-      //   // window.scrollTop(0)
-      //   self.busy = true
-      //   setTimeout(() => {
-      //     self.moreStories(maxPageHeight)
-      //     // this.busy = false
-      //   }, 1000)
-      // }
-      // Max height
-      // document.documentElement.clientHeight
-
-      // Document height
-      // document.body.scrollHeight
     }
-    // setInterval(function () {
-    //   this.fetchArticles()
-    // }.bind(this), 180000)
   }
 }
 </script>
@@ -537,8 +445,6 @@ footer {
 
 .icon-bg {
   background-color: #0AA8D3;
-  /*padding-top: 6px;
-  padding-bottom: 4px;*/
 }
 
 .source-link {

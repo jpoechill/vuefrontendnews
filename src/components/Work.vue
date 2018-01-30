@@ -1,5 +1,5 @@
 <template>
-  <div style="margin-top: 44px;">
+  <div style="margin-top: 63px;">
     <div v-for='(post, index) in list' v-bind:key='post.urlToImage'  id="fadeInUp" v-bind:class="{ hidden: !post.isVisible }" class='animated fadeInUp list-complete-item' style='overflow: visible; min-height: 40px; min-height: 100%; margin-left: -20px; margin-top: 18px;'>
       <b-container>
         <b-row>
